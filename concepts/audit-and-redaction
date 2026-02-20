@@ -1,0 +1,37 @@
+---
+title: Audit & Redaction
+description: AuditEvent schema and redaction-by-default guarantees.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Audit & Redaction
+
+## Goals
+
+- Provide compliance-friendly audit trails
+- Prevent sensitive data leakage via logs
+
+## Redaction levels
+
+- NONE (debug only)
+- HASH (default)
+- SIZE_ONLY
+- CATEGORY_ONLY
+- FULL
+
+## Default production posture
+
+- input redaction: HASH
+- output redaction: HASH
+- PII detection: enabled
+- debug mode: disabled
+
+```mermaid
+flowchart TD
+  A[Raw content] --> B[PII detection]
+  B --> C[Redaction strategy]
+  C --> D[SafeContent fields only]
+```
