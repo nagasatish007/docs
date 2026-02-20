@@ -1,0 +1,45 @@
+---
+title: Decision Model
+description: Deterministic Decision contract used across TealTiger components.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Decision Model
+
+## Why Decisions?
+
+TealTiger returns a stable, typed **Decision** object from policy-enforcing components so application code can handle outcomes predictably.
+
+## Decision fields (contract)
+
+- `action`: ALLOW | DENY | REDACT | TRANSFORM | REQUIRE_APPROVAL | DEGRADE
+- `reason_codes`: stable identifiers explaining the outcome
+- `risk_score`: 0–100
+- `mode`: ENFORCE | MONITOR | REPORT_ONLY
+- `policy_id`, `policy_version`
+- `correlation_id` (required), `trace_id` (optional)
+
+## Handling pattern
+
+```mermaid
+flowchart TD
+  A[Decision.action] -->|ALLOW| B[Proceed]
+  A -->|DENY| C[Block + error]
+  A -->|REQUIRE_APPROVAL| D[Human approval]
+  A -->|REDACT/TRANSFORM| E[Apply change]
+  A -->|DEGRADE| F[Fallback / downgrade]
+```
+
+## Example (pseudo)
+
+```ts
+// switch(decision.action) { ... }
+```
+
+## Best practices
+
+- Treat `reason_codes` as machine-readable constants for analytics and tests.
+- Use `risk_score` for routing and escalation.
