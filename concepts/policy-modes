@@ -1,0 +1,32 @@
+---
+title: Policy Modes
+description: Safe rollout modes for policies: ENFORCE, MONITOR, REPORT_ONLY.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Policy Modes
+
+## Modes
+
+- **ENFORCE**: block violations (non-ALLOW decisions may raise `PolicyViolationError`)
+- **MONITOR**: allow but log violations
+- **REPORT_ONLY**: log decisions without evaluating policy rules
+
+## Recommended rollout
+
+```mermaid
+flowchart LR
+  A[REPORT_ONLY] --> B[MONITOR] --> C[ENFORCE]
+```
+
+## Mode resolution order
+
+Global → environment override → policy override (most specific wins).
+
+## Production guidance
+
+- Start new deployments in **MONITOR**
+- Enforce only high-risk policies first
