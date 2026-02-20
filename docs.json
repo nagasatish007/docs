@@ -2,14 +2,14 @@
   "navigation": {
     "groups": [
       {
-        "group": "Get Started",
+        "group": "Get Started (v1.1.0)",
         "pages": [
           "index",
           "quickstart"
         ]
       },
       {
-        "group": "Core Concepts",
+        "group": "Core Concepts (v1.1.0)",
         "pages": [
           "concepts/decision-model",
           "concepts/policy-modes",
@@ -18,7 +18,7 @@
         ]
       },
       {
-        "group": "Policy Design",
+        "group": "Policy Design (v1.1.0)",
         "pages": [
           "policy/overview",
           "policy/conditions-and-actions",
@@ -27,7 +27,7 @@
         ]
       },
       {
-        "group": "Audit & Telemetry",
+        "group": "Audit & Telemetry (v1.1.0)",
         "pages": [
           "audit/audit-event-schema",
           "audit/logging-behavior",
@@ -35,7 +35,7 @@
         ]
       },
       {
-        "group": "Architecture",
+        "group": "Architecture (v1.1.0)",
         "pages": [
           "architecture/evaluation-flow",
           "architecture/enforcement-flow",
