@@ -1,0 +1,20 @@
+---
+title: Enforcement Flow
+description: How ENFORCE/MONITOR/REPORT_ONLY influence runtime behavior.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Enforcement Flow
+
+```mermaid
+flowchart TD
+  A[Evaluate policy] --> B{Mode}
+  B -->|REPORT_ONLY| C[ALLOW + log]
+  B -->|MONITOR| D[ALLOW + log violations]
+  B -->|ENFORCE| E{Violation?}
+  E -->|Yes| F[DENY/REQUIRE_APPROVAL + throw PolicyViolationError]
+  E -->|No| G[ALLOW]
+```
