@@ -1,0 +1,31 @@
+---
+title: Logging Behavior
+description: When audit events are emitted and what is (not) logged.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Logging Behavior
+
+## What is logged
+
+- policy evaluations
+- guardrail checks
+- tool executions
+- LLM request/response metadata (redaction-safe)
+- anomalies and circuit state changes
+
+## What is NOT logged by default
+
+- raw prompts
+- raw responses
+- raw PII
+
+## Outputs
+
+TealAudit can emit to:
+- console
+- files
+- custom sinks
