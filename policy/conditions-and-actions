@@ -1,0 +1,33 @@
+---
+title: Conditions & Actions
+description: How TealTiger policies express conditions and produce actions.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Conditions & Actions
+
+## Conditions
+
+Describe when a policy triggers (e.g., tool name is disallowed, PII detected, budget exceeded).
+
+## Actions (DecisionAction)
+
+- ALLOW
+- DENY
+- REDACT
+- TRANSFORM
+- REQUIRE_APPROVAL
+- DEGRADE
+
+## Example (illustrative)
+
+```json
+{
+  "tools": {
+    "file_delete": {"allowed": false}
+  }
+}
+```
