@@ -1,0 +1,28 @@
+---
+title: Stability Guarantees
+description: What is stable in v1.1.0 (contracts) vs what may evolve (APIs).
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Stability Guarantees
+
+## Stable contracts (should not change without notice)
+
+- Decision semantics
+- Policy mode semantics
+- Audit redaction defaults
+- Correlation tracing expectations
+- Cost metadata key conventions
+
+## May evolve
+
+- Package/module names
+- API method signatures
+- Helper utilities
+
+## Guidance
+
+Treat these docs as the **behavioral contract** for the SDK.
