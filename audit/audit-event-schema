@@ -1,0 +1,31 @@
+---
+title: AuditEvent Schema
+description: Versioned AuditEvent contract with safe content fields.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# AuditEvent Schema
+
+## Schema version
+
+Audit events use a versioned schema (e.g., `1.0.0`) to allow evolution.
+
+## Required fields
+
+- `schema_version`
+- `event_type`
+- `timestamp`
+- `correlation_id`
+
+## Optional fields
+
+- `trace_id`, `policy_id`, `policy_version`, `mode`, `action`, `reason_codes`, `risk_score`
+- `safe_inputs`, `safe_outputs`
+- `metadata` (non-sensitive)
+
+## Cost fields
+
+Cost data SHOULD be stored under `metadata.cost.*` (standardized keys).
