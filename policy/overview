@@ -1,0 +1,31 @@
+---
+title: Policy Overview
+description: What policies are, how they are evaluated, and how outcomes are enforced.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# Policy Overview
+
+## What is a policy?
+
+A policy defines constraints on actions such as tool usage, identity permissions, content safety, and cost governance.
+
+## Evaluation lifecycle
+
+```mermaid
+sequenceDiagram
+  participant App
+  participant Engine
+  participant Audit
+  App->>Engine: evaluate(request)
+  Engine->>Audit: policy.evaluation event
+  Engine-->>App: Decision
+```
+
+## Enforcement
+
+- In **ENFORCE**, violations lead to non-ALLOW decisions and may raise `PolicyViolationError`.
+- In **MONITOR**, violations are logged but allowed.
