@@ -1,0 +1,25 @@
+---
+title: v1.1.0 Scope
+description: What is included in TealTiger v1.1.0 and what is out of scope.
+---
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+
+# v1.1.0 Scope
+
+## Included
+
+- Policy rollout modes
+- Deterministic Decision contract
+- Correlation IDs + traceability
+- Audit schema + redaction guarantees
+- Policy test harness (if included in v1.1.x)
+- Cost metadata conventions
+
+## Not included
+
+- Centralized policy server / control plane
+- Governance dashboard
+- Runtime tool broker
