@@ -1,0 +1,56 @@
+---
+title: Reason Codes
+description: Stable, machine-readable reason codes for explainable and testable decisions in TealTiger v1.1.0.
+---
+
+import { Callout, Steps } from "mintlify/components";
+import { RequestExample, ResponseExample } from "mintlify/components";
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+# Reason Codes
+
+## Why reason codes exist
+
+`reason_codes` are **stable identifiers** that explain *why* a Decision was produced. They are designed for:
+
+- deterministic branching in application logic
+- audit queries (SIEM / log search)
+- CI assertions (policy test harness)
+- analytics (violation trends, top drivers)
+
+<Callout type="info">
+Do not parse free-text messages to determine behavior. Branch on <code>Decision.action</code> and <code>Decision.reason_codes</code>.
+</Callout>
+
+---
+
+## What a “good” reason code looks like
+
+A reason code should be:
+
+- **stable** (doesn’t change name once published)
+- **machine-readable** (UPPER_SNAKE_CASE)
+- **specific** (one meaning per code)
+- **portable** (works across languages and platforms)
+
+---
+
+## How reason codes are used
+
+### 1) Application branching (deterministic)
+
+<RequestExample>
+```ts title="TypeScript — branch on reason codes"
+function enforce(decision: any) {
+  if (decision.action === "DENY" && decision.reason_codes.includes("TOOL_NOT_ALLOWED")) {
+    throw new Error("Blocked: tool not allowed");
+  }
+
+  if (decision.action === "REQUIRE_APPROVAL" && decision.reason_codes.includes("APPROVAL_REQUIRED_FOR_COST")) {
+    return { needsApproval: true, decision };
+  }
+
+  return { ok: true };
+}
