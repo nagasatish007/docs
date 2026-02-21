@@ -1,0 +1,45 @@
+---
+title: Audit & Redaction
+description: Redaction-safe audit logging, schema expectations, and production defaults for TealTiger v1.1.0.
+---
+
+import { Callout, Steps } from "mintlify/components";
+import { RequestExample, ResponseExample } from "mintlify/components";
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0. API names may evolve, but **audit and redaction guarantees** are stable.
+
+# Audit & Redaction
+
+## Why TealTiger audits everything (safely)
+
+TealTiger is built for **security and governance** workflows, where you need evidence of:
+- what was evaluated,
+- what decision was made,
+- why it was made,
+- and how it was enforced,
+
+**without leaking sensitive data** (prompts, responses, secrets, PII).
+
+In v1.1.0, TealTiger’s audit posture is:
+
+- ✅ **Redaction by default**
+- ✅ **Correlation-driven traceability**
+- ✅ **Deterministic decision evidence**
+- ✅ **Safe structured metadata** for cost/security reporting
+
+<Callout type="info">
+Audit logs are only useful if they are safe to retain. Redaction is not a nice-to-have — it’s the default security posture.
+</Callout>
+
+---
+
+## The audit pipeline (what happens to data)
+
+```mermaid
+flowchart TD
+  A[Raw input/output] --> B[PII detection (optional but recommended)]
+  B --> C[Redaction strategy]
+  C --> D[SafeContent extraction]
+  D --> E[AuditEvent]
+  E --> F[Outputs: file / console / custom sink]
