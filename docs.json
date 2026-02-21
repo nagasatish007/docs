@@ -8,8 +8,49 @@
   "navigation": {
     "groups": [
       {
-        "group": "Get Started",
-        "pages": ["index"]
+        "group": "Get Started (v1.1.0)",
+        "pages": ["index", "quickstart"]
+      },
+      {
+        "group": "Core Concepts (v1.1.0)",
+        "pages": [
+          "concepts/decision-model",
+          "concepts/policy-modes",
+          "concepts/execution-identity",
+          "concepts/audit-and-redaction"
+        ]
+      },
+      {
+        "group": "Policy Design (v1.1.0)",
+        "pages": [
+          "policy/overview",
+          "policy/conditions-and-actions",
+          "policy/reason-codes",
+          "policy/risk-scores"
+        ]
+      },
+      {
+        "group": "Audit & Telemetry (v1.1.0)",
+        "pages": [
+          "audit/audit-event-schema",
+          "audit/logging-behavior",
+          "audit/cost-metadata"
+        ]
+      },
+      {
+        "group": "Architecture (v1.1.0)",
+        "pages": [
+          "architecture/evaluation-flow",
+          "architecture/enforcement-flow",
+          "architecture/logging-flow"
+        ]
+      },
+      {
+        "group": "Versioning",
+        "pages": [
+          "versioning/v1.1.0-scope",
+          "versioning/stability-guarantees"
+        ]
       }
     ]
   }
