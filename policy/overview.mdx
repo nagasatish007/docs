@@ -1,0 +1,35 @@
+---
+title: Policy Overview
+description: What TealTiger policies are, how they are evaluated, and how outcomes are enforced in v1.1.0.
+---
+
+import { Callout, Steps } from "mintlify/components";
+import { RequestExample, ResponseExample } from "mintlify/components";
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0. Final API names may evolve, but the **policy evaluation semantics** are stable.
+
+# Policy Overview
+
+## What is a policy?
+
+A **policy** is a deterministic set of rules that evaluates a request context and produces a **Decision**:
+
+- `action`: ALLOW / DENY / REQUIRE_APPROVAL / REDACT / TRANSFORM / DEGRADE
+- `reason_codes`: stable identifiers explaining why
+- `risk_score`: 0–100
+
+Policies exist so you can enforce **security and cost governance** consistently across agent workflows.
+
+---
+
+## Where policies run
+
+TealTiger is **SDK-only** in v1.1.0 — policies run inside your application process.
+
+```mermaid
+flowchart LR
+  A[App / Agent] --> B[TealEngine.evaluate]
+  B --> C[Decision]
+  B --> D[TealAudit.log (redaction-safe)]
+  C --> E[Proceed / Block / Approval / Transform]
