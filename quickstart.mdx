@@ -1,56 +1,45 @@
 ---
 title: Quickstart (v1.1.0)
-description: Integrate TealTiger into an AI workflow in minutes using policies, decisions, and audit logs.
+description: Add policy rollout modes, deterministic decisions, and redaction-safe audit logs to your AI workflow in minutes.
 ---
 
-> **Version:** v1.1.0  
-> This page documents behavior guaranteed in TealTiger v1.1.0.
+import { Callout, Steps } from "mintlify/components";
+import { RequestExample, ResponseExample } from "mintlify/components";
 
+> **Version:** v1.1.0  
+> This Quickstart documents the **v1.1.0 contract** (requirements + design). Final API names may evolve, but the **flow and guarantees** described here are the target behavior.
 
 # Quickstart (v1.1.0)
 
-## Goal
+## What you’ll build
 
-Add **policy enforcement**, **deterministic decisions**, and **redaction-safe audit logs** to your application.
+In 5–10 minutes, you’ll add TealTiger to an “agent-like” flow that:
 
-## Steps
+- Blocks a dangerous tool (`file_delete`) in **ENFORCE**
+- Allows a safe tool (`customer_data_read`)
+- Emits **redaction-safe audit events** (no raw prompts/responses by default)
+- Correlates everything using `correlation_id` (and optional `trace_id`)
 
-1. Install the SDK (TypeScript / Python)
-2. Configure `TealEngine` with rollout mode
-3. Configure `TealAudit` with redaction defaults
-4. Create `ExecutionContext` with `correlation_id`
-5. Evaluate a request and handle the returned `Decision`
+✅ **Success criteria:** you see a deterministic `Decision` and an `AuditEvent` with the same `correlation_id`.
 
-## Diagram (flow)
+---
+
+## Architecture (1-minute mental model)
 
 ```mermaid
-graph TD
-  A[App] --> B[TealEngine.evaluate]
-  B --> C[Decision]
-  B --> D[TealAudit.log]
-  C --> E[ALLOW/DENY/REQUIRE_APPROVAL]
-```
+sequenceDiagram
+  participant App as Application
+  participant Engine as TealEngine
+  participant Audit as TealAudit
+  participant Tool as Tool
 
-## Example (TypeScript)
-
-```ts
-// TODO: Replace with final SDK import paths once code is published.
-// Demonstrates intended flow per v1.1.0 contract.
-
-// 1) Create context
-// 2) Evaluate request
-// 3) Handle Decision
-// 4) Emit AuditEvent
-```
-
-## Example (Python)
-
-```py
-# TODO: Replace with final SDK import paths once code is published.
-# Demonstrates intended flow per v1.1.0 contract.
-```
-
-## Next
-
-- Read **Decision Model** and **Policy Modes**
-- Configure **Audit & Redaction** for production defaults
+  App->>Engine: evaluate(request + context)
+  Engine-->>App: Decision (ALLOW/DENY/REQUIRE_APPROVAL)
+  Engine->>Audit: policy.evaluation (redaction-safe)
+  alt Decision=ALLOW
+    App->>Tool: execute(tool)
+    Tool-->>App: result
+    App->>Audit: tool.execution (redaction-safe)
+  else Decision=DENY
+    App->>Audit: policy.denied (redaction-safe)
+  end
