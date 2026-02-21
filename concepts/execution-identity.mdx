@@ -1,0 +1,73 @@
+---
+title: Execution Identity
+description: Correlation IDs, trace IDs, and span identifiers for end-to-end traceability in TealTiger v1.1.0.
+---
+
+import { Callout, Steps } from "mintlify/components";
+import { RequestExample, ResponseExample } from "mintlify/components";
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0. Identifiers are stable contracts; helper APIs may evolve.
+
+# Execution Identity
+
+## Why execution identity matters
+
+In production, a single “agent request” can trigger multiple policy checks, tool calls, and model calls. Without a consistent identity model, you cannot reliably answer:
+
+- *Which decision blocked this request?*
+- *What tool call caused the incident?*
+- *Which audit events belong to the same user action?*
+- *How do I trace this across services and logs?*
+
+TealTiger solves this with a simple identity set carried in `ExecutionContext` and propagated across components.
+
+---
+
+## The identifiers (v1.1.0)
+
+### 1) `correlation_id` (required)
+A unique ID that ties together **all decisions and audit events** for a request/workflow entry.
+
+- Required in Decisions and AuditEvents
+- Auto-generated (UUID v4) if not provided
+- Should be treated as the “primary lookup key” for investigations
+
+### 2) `trace_id` (optional)
+A distributed tracing identifier (e.g., OpenTelemetry-style) that links TealTiger’s events to your broader observability stack.
+
+- Optional
+- Should be preserved if you already use tracing
+- Enables joining TealTiger events with your APM traces
+
+### 3) `span_id` / `parent_span_id` (optional but recommended)
+Operation-level identifiers that support nested tracing (tool calls, guard checks, etc.). In v1.1.0, these enable consistent nested tracing and prepare the path for v1.2 lineage graphs.
+
+- `span_id`: identifies the current operation step
+- `parent_span_id`: identifies the parent step (nested operation)
+
+<Callout type="info">
+For v1.1.0, <code>correlation_id</code> is the must-have. <code>trace_id</code> and <code>span_id</code> are strongly recommended if you want deeper traceability.
+</Callout>
+
+---
+
+## How identity propagates (high-level flow)
+
+```mermaid
+sequenceDiagram
+  participant App as Application
+  participant Ctx as ExecutionContext
+  participant Engine as TealEngine
+  participant Guard as TealGuard
+  participant Circuit as TealCircuit
+  participant Audit as TealAudit
+
+  App->>Ctx: createContext()
+  App->>Engine: evaluate(request + ctx)
+  Engine->>Guard: validate(ctx)
+  Guard-->>Engine: Decision
+  Engine->>Circuit: check(ctx)
+  Circuit-->>Engine: Decision
+  Engine->>Audit: log(AuditEvent with correlation_id)
+  Engine-->>App: Decision (includes correlation_id)
