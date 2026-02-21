@@ -1,0 +1,53 @@
+---
+title: Policy Modes
+description: Safely roll out policies using ENFORCE, MONITOR, and REPORT_ONLY in TealTiger v1.1.0.
+---
+
+import { Callout, Steps } from "mintlify/components";
+import { RequestExample, ResponseExample } from "mintlify/components";
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0. Final API names may evolve, but **mode semantics and rollout strategy** are stable.
+
+# Policy Modes
+
+## Why policy modes exist
+
+Policy modes let you introduce governance **without breaking production**. Instead of flipping enforcement on for everything at once, you can:
+
+- start by observing (REPORT_ONLY / MONITOR),
+- measure violations and false positives,
+- then gradually enforce (ENFORCE) only where you’re confident.
+
+<Callout type="info">
+Mode is a first-class part of the v1.1.0 contract. It must appear in the returned <code>Decision</code> and in emitted <code>AuditEvent</code> records.
+</Callout>
+
+---
+
+## The three modes (semantics)
+
+### ✅ REPORT_ONLY
+- **Purpose:** collect telemetry without enforcing.
+- **Behavior:** allow requests; record decisions and policy metadata **without evaluating policy rules** (as per v1.1.x design intent).
+- **Use when:** you want “visibility only” before any evaluation overhead or enforcement.
+
+### 👀 MONITOR
+- **Purpose:** evaluate policies and learn impact.
+- **Behavior:** evaluate policy rules; **allow** requests even when violated; log violations in decisions/audit.
+- **Use when:** you want real evaluation signals but do not want to block production.
+
+### 🛑 ENFORCE
+- **Purpose:** block violations.
+- **Behavior:** evaluate policies; produce non-ALLOW decisions for violations; in typical v1.1.x behavior, non-ALLOW in ENFORCE may raise `PolicyViolationError` (carrying the Decision).
+- **Use when:** you are confident in policy correctness and impact.
+
+---
+
+## Mode progression (recommended rollout)
+
+```mermaid
+flowchart LR
+  A[REPORT_ONLY] --> B[MONITOR] --> C[ENFORCE]
+  B --> D[Enforce only critical policies first]
+  D --> C
