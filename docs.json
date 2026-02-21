@@ -15,9 +15,9 @@
         "group": "Core Concepts (v1.1.0)",
         "pages": [
           "concepts/decision-model.mdx",
-          "concepts/policy-modes",
-          "concepts/execution-identity",
-          "concepts/audit-and-redaction"
+          "concepts/policy-modes.mdx",
+          "concepts/execution-identity.mdx",
+          "concepts/audit-and-redaction.mdx"
         ]
       },
       {
