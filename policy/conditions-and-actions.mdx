@@ -1,0 +1,92 @@
+---
+title: Conditions & Actions
+description: How TealTiger policies evaluate conditions and produce deterministic actions in v1.1.0.
+---
+
+import { Callout, Steps } from "mintlify/components";
+import { RequestExample, ResponseExample } from "mintlify/components";
+
+> **Version:** v1.1.0  
+> This page documents behavior guaranteed in TealTiger v1.1.0.
+
+# Conditions & Actions
+
+## Mental model
+
+Policies follow a simple rule:
+
+**IF** a condition matches the request context  
+**THEN** emit a deterministic Decision (action + reason codes + risk score)
+
+- **Conditions** decide *when* a rule triggers
+- **Actions** decide *how* the system should respond
+- **Reason codes** explain *why*
+- **Risk score** indicates *severity*
+
+---
+
+## Common condition patterns
+
+### Tool governance
+- Tool name is disallowed
+- Tool used outside approved environment
+- Tool invoked with unsafe parameters
+
+### Environment gating
+- `env == production` AND destructive action
+- Non-prod behaviors allowed, prod restricted
+
+### Identity / tenant scoping
+- Tenant not authorized for model or tool
+- App or agent purpose outside allowed scope
+
+### Content & classification
+- PII detected
+- Secrets detected
+- Unsafe or malicious content classification
+
+### Cost signals (when available)
+- Estimated cost exceeds threshold
+- Budget exceeded
+- Model tier not allowed
+
+---
+
+## Decision actions (v1.1.0)
+
+### ALLOW
+Proceed with the request. Still log the decision.
+
+### DENY
+Block the request. In ENFORCE mode, typically raises a policy violation error.
+
+### REQUIRE_APPROVAL
+Pause execution and require external approval (human or system).
+
+### REDACT
+Remove sensitive fragments and proceed with sanitized content.
+
+### TRANSFORM
+Modify the request or response before continuing (e.g., schema enforcement, truncation).
+
+### DEGRADE
+Proceed with reduced capability (cheaper model, fewer tools, limited output).
+
+<Callout type="info">
+TealTiger produces the Decision. Your application applies the action.
+</Callout>
+
+---
+
+## Example: tool allow/deny policy (illustrative)
+
+<RequestExample>
+```json title="RequestContext"
+{
+  "action": "tool.execute",
+  "tool": "file_delete",
+  "context": {
+    "env": "production",
+    "tenant_id": "acme-corp"
+  }
+}
